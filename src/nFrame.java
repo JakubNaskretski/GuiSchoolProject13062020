@@ -1,23 +1,43 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 
 public class nFrame extends JFrame {
 
-    BorderLayout borderLayout1 = new BorderLayout();
+    BorderLayout borderLayout1;
+    OwnListModel ownListModel;
+
+    JList jList;
 
 
     public nFrame(){
 
-        this.getContentPane().setLayout(borderLayout1);
-        this.setSize(new Dimension(400, 300));
-        OwnListModel ownListModel = new OwnListModel();
-        this.setTitle(ownListModel.getTitleDate());
-        JList list1 = new JList(ownListModel);
+        super(LocalDate.now().getMonthValue()+"."+LocalDate.now().getYear());
+        addComponentsToPane();
 
-//        list1.setModel(ownListModel);
-//        list1.repaint();
+
+
+        setPreferredSize(new Dimension(250, 350));
+
 
         setResizable(false);
-        this.getContentPane().add(new JScrollPane(list1), BorderLayout.CENTER);
+
     }
+
+    private void addComponentsToPane() {
+        ownListModel = new OwnListModel();
+
+        borderLayout1 = new BorderLayout();
+
+        getContentPane().setLayout(borderLayout1);
+
+        jList = new JList(ownListModel);
+        jList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jList.setFont(new Font(Font.DIALOG, Font.BOLD,  15));
+
+       add(new JScrollPane(jList), BorderLayout.CENTER);
+
+    }
+
+
 }

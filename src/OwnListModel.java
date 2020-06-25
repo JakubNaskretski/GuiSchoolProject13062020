@@ -1,43 +1,58 @@
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Calendar;
+import javax.swing.event.ListDataListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
 
 import static java.util.Calendar.DAY_OF_MONTH;
 
-public class OwnListModel extends AbstractListModel {
+public class OwnListModel implements ListModel {
 
-    ArrayList<String> rowsList = new ArrayList<>();
-
-    Calendar calendar = Calendar.getInstance();
-
-    private int year;
-    private int month;
-    private int day;
+    private ArrayList<String> currentMonthDays;
+    private YearMonth yearMonthObject;
 
     public OwnListModel() {
-        this.year = Calendar.YEAR;
-        this.month = Calendar.MONTH;
-        this.day = DAY_OF_MONTH;
-        addDayToList();
-    }
+        currentMonthDays = new ArrayList();
 
-    private void addDayToList() {
-        for (int i = 0; i <= calendar.getActualMaximum(DAY_OF_MONTH); i++){
-            rowsList.add(i+" "+"-"+" "+"to bedzie dzien");
+        yearMonthObject = YearMonth.of(LocalDate.now().getYear(),LocalDate.now().getMonth());
+        try {
+        for (int i=1;i< yearMonthObject.lengthOfMonth()+1;i++){
+            currentMonthDays.add(i +" - "+ new SimpleDateFormat("EEEE")
+                    .format(new SimpleDateFormat("yyyy-M-d")
+                            .parse(String.format("%d-%d-%d",
+                                    LocalDate.now().getYear(),
+                                    LocalDate.now().getMonthValue(), i))));
+        }
+            } catch (ParseException e){
+            System.out.println("Couldn't make calendar");
         }
     }
 
     @Override
     public int getSize() {
-        return 0;
+        return currentMonthDays.size();
     }
 
     @Override
-    public Object getElementAt( int index ) {
-        return null;
+    public Object getElementAt(int index) {
+        return currentMonthDays.get(index);
     }
 
-    public String getTitleDate() {
-        return (calendar.get(Calendar.MONTH)+"."+calendar.get(Calendar.YEAR));
+    @Override
+    public void addListDataListener(ListDataListener l) {
+
     }
+
+    @Override
+    public void removeListDataListener(ListDataListener l) {
+    }
+
+    public void printAllElements() {
+        for (int i=0; i<currentMonthDays.size();i++){
+                    System.out.println(currentMonthDays.get(i));
+        }
+    }
+
 }
